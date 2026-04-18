@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Yunus</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#080808;--surface:#111;--surface2:#181818;--border:#222;--gold:#C9A96E;--blue:#4A90D9;--text:#E2DAC8;--muted:#5a544a;--red:#E05555;--green:#5BAD7F;--mono:'JetBrains Mono',monospace;--serif:'Playfair Display',serif;}
+    [data-theme="light"]{--bg:#F7F2E8;--surface:#EDE6D5;--surface2:#E5DCCA;--border:#D4C9B0;--gold:#8B6418;--blue:#1E62A8;--text:#18130A;--muted:#7A6F58;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;transition:background .35s,color .35s;}
+
+    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    .login-box{width:360px;padding:3rem;border:1px solid var(--border);background:var(--surface);}
+    .login-box h1{font-family:var(--serif);font-size:1.8rem;color:var(--gold);margin-bottom:.3rem;}
+    .login-box p{font-size:.7rem;color:var(--muted);letter-spacing:.1em;margin-bottom:2rem;}
+    .field{margin-bottom:1.2rem;}
+    .field label{display:block;font-size:.65rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;}
+    .field input,.field textarea,.field select{width:100%;padding:.75rem 1rem;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:.8rem;outline:none;border-radius:2px;transition:border-color .2s;}
+    .field input:focus,.field textarea:focus{border-color:var(--gold);}
+    .field textarea{resize:vertical;min-height:100px;}
+    .err{font-size:.68rem;color:var(--red);margin-top:.8rem;display:none;}
+    .btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:.8rem 1.5rem;border:none;cursor:pointer;border-radius:2px;transition:all .2s;}
+    .btn-gold{background:var(--gold);color:#080808;}.btn-gold:hover{filter:brightness(1.1);}
+    .btn-ghost{background:none;border:1px solid var(--border);color:var(--muted);}.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+    .btn-red{background:none;border:1px solid var(--red);color:var(--red);}.btn-red:hover{background:var(--red);color:white;}
+
+    .admin{display:none;min-height:100vh;}
+    .admin.visible{display:flex;}
+    .sidebar{width:220px;min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;}
+    .sidebar-logo{padding:1.5rem;border-bottom:1px solid var(--border);}
+    .sidebar-logo span{font-family:var(--serif);font-size:1.1rem;color:var(--gold);}
+    .sidebar-logo small{display:block;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.2rem;}
+    .sidebar-nav{flex:1;padding:1rem 0;}
+    .nav-item{display:flex;align-items:center;gap:.7rem;padding:.75rem 1.5rem;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .2s;}
+    .nav-item:hover{color:var(--text);}
+    .nav-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(201,169,110,.04);}
+    .sidebar-bottom{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem;}
+    .main{margin-left:220px;flex:1;}
+    .topbar{padding:1.2rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);position:sticky;top:0;z-index:10;}
+    .topbar h2{font-family:var(--serif);font-size:1.2rem;font-weight:600;color:var(--text);}
+    .topbar-actions{display:flex;gap:.7rem;align-items:center;}
+    .content-area{padding:2rem;}
+    .panel{display:none;}.panel.active{display:block;}
+    .card{background:var(--surface);border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem;border-radius:2px;}
+    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+    .card-title{font-family:var(--serif);font-size:1rem;color:var(--text);}
+    .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1.5rem;}
+    .tab{padding:.6rem 1.2rem;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
+    .tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+    .tab-content{display:none;}.tab-content.active{display:block;}
+    .project-list{display:flex;flex-direction:column;gap:.8rem;}
+    .project-item{background:var(--surface2);border:1px solid var(--border);padding:1rem 1.2rem;border-radius:2px;display:flex;align-items:center;justify-content:space-between;}
+    .project-item-info h4{font-family:var(--serif);font-size:.95rem;color:var(--text);}
+    .project-item-info small{font-size:.65rem;color:var(--muted);letter-spacing:.08em;}
+    .project-item-actions{display:flex;gap:.5rem;}
+    .badge{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;border-radius:2px;}
+    .badge-green{background:rgba(91,173,127,.15);color:var(--green);border:1px solid rgba(91,173,127,.3);}
+    .badge-blue{background:rgba(74,144,217,.15);color:var(--blue);border:1px solid rgba(74,144,217,.3);}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--surface);border:1px solid var(--border);width:680px;max-width:95vw;max-height:88vh;overflow-y:auto;border-radius:2px;}
+    .modal-header{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1;}
+    .modal-header h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);}
+    .modal-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;}
+    .modal-close:hover{color:var(--text);}
+    .modal-body{padding:1.5rem;}
+    .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.7rem;}
+    .toast{position:fixed;bottom:2rem;right:2rem;background:var(--green);color:white;font-size:.72rem;letter-spacing:.08em;padding:.8rem 1.5rem;border-radius:2px;transform:translateY(100px);opacity:0;transition:all .3s;z-index:300;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.err-toast{background:var(--red);}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .info-box{background:rgba(201,169,110,.06);border:1px solid rgba(201,169,110,.2);padding:1rem 1.2rem;border-radius:2px;margin-bottom:1.5rem;}
+    .info-box p{font-size:.72rem;color:var(--muted);line-height:1.6;}.info-box strong{color:var(--gold);}
+    hr{border:none;border-top:1px solid var(--border);margin:1.5rem 0;}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(201,169,110,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    @media(max-width:600px){.grid2{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>Admin</h1>
+    <p>Site Yönetim Paneli</p>
+    <div class="field"><label>E-posta</label><input type="email" id="loginEmail" placeholder="admin@mail.com"/></div>
+    <div class="field"><label>Şifre</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
+    <button class="btn btn-gold" onclick="doLogin()" style="width:100%" id="loginBtn">Giriş Yap</button>
+    <div class="err" id="loginErr">Hatalı e-posta veya şifre.</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="admin" id="adminPanel">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span>يونس</span>
+      <small>Admin Panel</small>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showPanel('hero')" data-panel="hero"><span>✦</span> Ana Sayfa</div>
+      <div class="nav-item" onclick="showPanel('projects')" data-panel="projects"><span>◈</span> Projeler</div>
+      <div class="nav-item" onclick="showPanel('about')" data-panel="about"><span>◉</span> Hakkımda</div>
+      <div class="nav-item" onclick="showPanel('contact')" data-panel="contact"><span>◎</span> İletişim</div>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="index.html" class="btn btn-ghost" style="text-align:center;text-decoration:none;display:block">← Siteye Dön</a>
+      <button class="btn btn-ghost" onclick="doLogout()">Çıkış</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h2 id="panelTitle">Ana Sayfa</h2>
+      <div class="topbar-actions">
+        <button class="ctrl-btn theme-btn btn" onclick="toggleTheme()" id="themeBtn" style="border:1px solid var(--border);color:var(--muted);background:none;width:2rem;height:2rem;padding:0;border-radius:50%;cursor:pointer;">☀️</button>
+        <button class="btn btn-gold" onclick="saveAll()" id="saveBtn">Kaydet</button>
+      </div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- HERO -->
+      <div class="panel active" id="panel-hero">
+        <div class="info-box"><p><strong>Firestore</strong>'a kaydedilir — her cihazdan anlık güncellenir.</p></div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Hero Metinleri</span></div>
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab(this,'hero-tr')">🇹🇷 Türkçe</div>
+            <div class="tab" onclick="switchTab(this,'hero-en')">🇬🇧 English</div>
+          </div>
+          <div class="tab-content active" id="hero-tr">
+            <div class="field"><label>Etiket</label><input type="text" id="hero_labelTR"/></div>
+            <div class="field"><label>Biyografi (HTML destekli)</label><textarea id="hero_bioTR" rows="4"></textarea></div>
+          </div>
+          <div class="tab-content" id="hero-en">
+            <div class="field"><label>Label</label><input type="text" id="hero_labelEN"/></div>
+            <div class="field"><label>Bio (HTML supported)</label><textarea id="hero_bioEN" rows="4"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJELER -->
+      <div class="panel" id="panel-projects">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+          <button class="btn btn-gold" onclick="openNewProject()">+ Yeni Proje</button>
+        </div>
+        <div class="project-list" id="projectList"></div>
+      </div>
+
+      <!-- HAKKIMDA -->
+      <div class="panel" id="panel-about">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Hakkımda Metinleri</span></div>
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab(this,'about-tr')">🇹🇷 Türkçe</div>
+            <div class="tab" onclick="switchTab(this,'about-en')">🇬🇧 English</div>
+          </div>
+          <div class="tab-content active" id="about-tr">
+            <div class="field"><label>Paragraf 1</label><textarea id="about_p1TR" rows="3"></textarea></div>
+            <div class="field"><label>Paragraf 2</label><textarea id="about_p2TR" rows="3"></textarea></div>
+            <div class="field"><label>Paragraf 3</label><textarea id="about_p3TR" rows="3"></textarea></div>
+          </div>
+          <div class="tab-content" id="about-en">
+            <div class="field"><label>Paragraph 1</label><textarea id="about_p1EN" rows="3"></textarea></div>
+            <div class="field"><label>Paragraph 2</label><textarea id="about_p2EN" rows="3"></textarea></div>
+            <div class="field"><label>Paragraph 3</label><textarea id="about_p3EN" rows="3"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- İLETİŞİM -->
+      <div class="panel" id="panel-contact">
+        <div class="card">
+          <div class="card-header"><span class="card-title">İletişim Bilgileri</span></div>
+          <div class="grid2">
+            <div class="field"><label>E-posta</label><input type="email" id="contact_email"/></div>
+            <div class="field"><label>GitHub URL</label><input type="url" id="contact_github"/></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PROJE MODAL -->
+<div class="modal-overlay" id="projectModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Proje Düzenle</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid2">
+        <div class="field"><label>ID (url için, boşluksuz)</label><input type="text" id="proj_id" placeholder="goktug25"/></div>
+        <div class="field"><label>Numara</label><input type="text" id="proj_num" placeholder="01 / UAV"/></div>
+      </div>
+      <div class="field"><label>İsim</label><input type="text" id="proj_name"/></div>
+      <div class="grid2">
+        <div class="field"><label>Yıl</label><input type="text" id="proj_year"/></div>
+        <div class="field"><label>GitHub URL</label><input type="url" id="proj_github"/></div>
+      </div>
+      <div class="field"><label>Etiketler (virgülle, renk için ::blue veya ::gold)</label><input type="text" id="proj_tags" placeholder="PyQt5::blue, SITL, TEKNOFEST::gold"/></div>
+      <hr/>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,'proj-tr')">🇹🇷 Türkçe</div>
+        <div class="tab" onclick="switchTab(this,'proj-en')">🇬🇧 English</div>
+      </div>
+      <div class="tab-content active" id="proj-tr">
+        <div class="field"><label>Kısa açıklama (kart)</label><textarea id="proj_descTR" rows="2"></textarea></div>
+        <div class="field"><label>Başlık (detay)</label><input type="text" id="proj_titleTR"/></div>
+        <div class="field"><label>Özet</label><textarea id="proj_summaryTR" rows="2"></textarea></div>
+        <div class="field"><label>İçerik (HTML)</label><textarea id="proj_bodyTR" rows="6"></textarea></div>
+      </div>
+      <div class="tab-content" id="proj-en">
+        <div class="field"><label>Short description (card)</label><textarea id="proj_descEN" rows="2"></textarea></div>
+        <div class="field"><label>Title (detail)</label><input type="text" id="proj_titleEN"/></div>
+        <div class="field"><label>Summary</label><textarea id="proj_summaryEN" rows="2"></textarea></div>
+        <div class="field"><label>Body (HTML)</label><textarea id="proj_bodyEN" rows="6"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">İptal</button>
+      <button class="btn btn-red" id="deleteBtn" onclick="deleteProject()" style="display:none">Sil</button>
+      <button class="btn btn-gold" onclick="saveProject()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="content.js"></script>
+<script>
+const db   = firebase.firestore();
+const auth = firebase.auth();
+
+// ── AUTH ──
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  const btn   = document.getElementById('loginBtn');
+  errEl.style.display = 'none';
+  if (!email || !pass) { errEl.textContent = 'E-posta ve şifre gir.'; errEl.style.display = 'block'; return; }
+  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled = true;
+  try {
+    await auth.signInWithEmailAndPassword(email, pass);
+  } catch(e) {
+    const msgs = {
+      'auth/invalid-email':      'Geçersiz e-posta formatı.',
+      'auth/user-not-found':     'Bu e-posta ile kayıtlı kullanıcı yok.',
+      'auth/wrong-password':     'Şifre yanlış.',
+      'auth/invalid-credential': 'E-posta veya şifre hatalı.',
+      'auth/too-many-requests':  'Çok fazla deneme. Biraz bekle.',
+    };
+    errEl.textContent = msgs[e.code] || ('Hata: ' + e.code);
+    errEl.style.display = 'block';
+    btn.textContent = 'Giriş Yap'; btn.disabled = false;
+    console.error('Login error:', e.code, e.message);
+  }
+}
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+async function doLogout() {
+  await auth.signOut();
+}
+
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').classList.add('visible');
+    await loadIntoFields();
+  } else {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminPanel').classList.remove('visible');
+  }
+});
+
+// ── VERİ YÜKLEMESİ ──
+let workingContent = null;
+async function loadIntoFields() {
+  workingContent = await loadSiteContent();
+  const C = workingContent;
+  document.getElementById('hero_labelTR').value = C.hero.labelTR || '';
+  document.getElementById('hero_labelEN').value = C.hero.labelEN || '';
+  document.getElementById('hero_bioTR').value   = C.hero.bioTR   || '';
+  document.getElementById('hero_bioEN').value   = C.hero.bioEN   || '';
+  document.getElementById('about_p1TR').value = C.about.p1TR || '';
+  document.getElementById('about_p1EN').value = C.about.p1EN || '';
+  document.getElementById('about_p2TR').value = C.about.p2TR || '';
+  document.getElementById('about_p2EN').value = C.about.p2EN || '';
+  document.getElementById('about_p3TR').value = C.about.p3TR || '';
+  document.getElementById('about_p3EN').value = C.about.p3EN || '';
+  document.getElementById('contact_email').value  = C.contact.email  || '';
+  document.getElementById('contact_github').value = C.contact.github || '';
+}
+
+// ── KAYDET (Firestore'a yaz) ──
+async function saveAll() {
+  if (!workingContent) return;
+  const btn = document.getElementById('saveBtn');
+  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled = true;
+
+  workingContent.hero.labelTR = document.getElementById('hero_labelTR').value;
+  workingContent.hero.labelEN = document.getElementById('hero_labelEN').value;
+  workingContent.hero.bioTR   = document.getElementById('hero_bioTR').value;
+  workingContent.hero.bioEN   = document.getElementById('hero_bioEN').value;
+  workingContent.about.p1TR = document.getElementById('about_p1TR').value;
+  workingContent.about.p1EN = document.getElementById('about_p1EN').value;
+  workingContent.about.p2TR = document.getElementById('about_p2TR').value;
+  workingContent.about.p2EN = document.getElementById('about_p2EN').value;
+  workingContent.about.p3TR = document.getElementById('about_p3TR').value;
+  workingContent.about.p3EN = document.getElementById('about_p3EN').value;
+  workingContent.contact.email  = document.getElementById('contact_email').value;
+  workingContent.contact.github = document.getElementById('contact_github').value;
+
+  try {
+    await db.doc(DB_DOC).set(workingContent);
+    showToast('✓ Firestore\'a kaydedildi');
+  } catch(e) {
+    console.error('Save error:', e.code, e.message);
+    const msgs = {
+      'permission-denied': 'Firestore izin hatası. Kuralları kontrol et.',
+      'unavailable':       'Firestore bağlantı hatası. İnternet bağlantını kontrol et.',
+    };
+    showToast((msgs[e.code] || 'Hata: ' + e.code + ' — ' + e.message), true);
+  }
+  btn.textContent = 'Kaydet'; btn.disabled = false;
+}
+
+// ── PROJELER ──
+function renderProjectList() {
+  const list = document.getElementById('projectList');
+  list.innerHTML = '';
+  (workingContent.projects || []).forEach((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'project-item';
+    const status = p.detail?.status || 'active';
+    el.innerHTML = `
+      <div class="project-item-info">
+        <h4>${p.name}</h4>
+        <small>${p.num} · ${p.detail?.year||''} <span class="badge badge-${status==='published'?'green':'blue'}">${status}</span></small>
+      </div>
+      <div class="project-item-actions">
+        <button class="btn btn-ghost" onclick="openEditProject(${i})">Düzenle</button>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+let editingIndex = -1;
+function openNewProject() {
+  editingIndex = -1;
+  document.getElementById('modalTitle').textContent = 'Yeni Proje';
+  document.getElementById('deleteBtn').style.display = 'none';
+  ['proj_id','proj_num','proj_name','proj_year','proj_github','proj_tags',
+   'proj_descTR','proj_titleTR','proj_summaryTR','proj_bodyTR',
+   'proj_descEN','proj_titleEN','proj_summaryEN','proj_bodyEN']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('projectModal').classList.add('open');
+}
+function openEditProject(i) {
+  editingIndex = i;
+  const p = workingContent.projects[i];
+  document.getElementById('modalTitle').textContent = 'Düzenle — ' + p.name;
+  document.getElementById('deleteBtn').style.display = 'inline-block';
+  document.getElementById('proj_id').value     = p.id || '';
+  document.getElementById('proj_num').value    = p.num || '';
+  document.getElementById('proj_name').value   = p.name || '';
+  document.getElementById('proj_year').value   = p.detail?.year || '';
+  document.getElementById('proj_github').value = p.detail?.github || '';
+  document.getElementById('proj_tags').value   = (p.tags||[]).join(', ');
+  document.getElementById('proj_descTR').value    = p.descTR || '';
+  document.getElementById('proj_titleTR').value   = p.detail?.titleTR || '';
+  document.getElementById('proj_summaryTR').value = p.detail?.summaryTR || '';
+  document.getElementById('proj_bodyTR').value    = p.detail?.bodyTR || '';
+  document.getElementById('proj_descEN').value    = p.descEN || '';
+  document.getElementById('proj_titleEN').value   = p.detail?.titleEN || '';
+  document.getElementById('proj_summaryEN').value = p.detail?.summaryEN || '';
+  document.getElementById('proj_bodyEN').value    = p.detail?.bodyEN || '';
+  document.getElementById('projectModal').classList.add('open');
+}
+function closeModal() { document.getElementById('projectModal').classList.remove('open'); }
+
+async function saveProject() {
+  const id = document.getElementById('proj_id').value.trim() || 'proje'+Date.now();
+  const proj = {
+    id, num: document.getElementById('proj_num').value,
+    name:  document.getElementById('proj_name').value,
+    descTR: document.getElementById('proj_descTR').value,
+    descEN: document.getElementById('proj_descEN').value,
+    tags: document.getElementById('proj_tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    link: `projects/${id}.html`,
+    detail: {
+      titleTR:   document.getElementById('proj_titleTR').value,
+      titleEN:   document.getElementById('proj_titleEN').value,
+      summaryTR: document.getElementById('proj_summaryTR').value,
+      summaryEN: document.getElementById('proj_summaryEN').value,
+      bodyTR:    document.getElementById('proj_bodyTR').value,
+      bodyEN:    document.getElementById('proj_bodyEN').value,
+      tags: document.getElementById('proj_tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+      status: 'active',
+      year:   document.getElementById('proj_year').value,
+      github: document.getElementById('proj_github').value,
+    }
+  };
+  if (editingIndex >= 0) workingContent.projects[editingIndex] = proj;
+  else workingContent.projects.push(proj);
+  try {
+    await db.doc(DB_DOC).set(workingContent);
+    showToast('✓ Proje kaydedildi');
+  } catch(e) { showToast('Hata: ' + e.message, true); }
+  closeModal(); renderProjectList();
+}
+
+async function deleteProject() {
+  if (!confirm('Bu projeyi silmek istediğinden emin misin?')) return;
+  workingContent.projects.splice(editingIndex, 1);
+  await db.doc(DB_DOC).set(workingContent);
+  showToast('Proje silindi'); closeModal(); renderProjectList();
+}
+
+// ── PANEL / TAB ──
+const panelTitles = {hero:'Ana Sayfa',projects:'Projeler',about:'Hakkımda',contact:'İletişim'};
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelector(`[data-panel="${name}"]`).classList.add('active');
+  document.getElementById('panelTitle').textContent = panelTitles[name];
+  if (name === 'projects') renderProjectList();
+}
+function switchTab(el, contentId) {
+  const parent = el.closest('.card,.modal-body');
+  parent.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  parent.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(contentId).classList.add('active');
+}
+
+// ── TEMA ──
+let dark = true;
+function toggleTheme() {
+  dark = !dark;
+  document.documentElement.setAttribute('data-theme', dark?'dark':'light');
+  document.getElementById('themeBtn').textContent = dark?'☀️':'🌙';
+}
+
+// ── TOAST ──
+function showToast(msg, isErr=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isErr?' err-toast':'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proje — Yunus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#080808;--surface:#111;--border:#1e1e1e;
+      --gold:#C9A96E;--gold-dim:#7a6040;--blue:#4A90D9;
+      --text:#E2DAC8;--muted:#5a544a;
+      --serif:'Playfair Display',Georgia,serif;
+      --mono:'JetBrains Mono',monospace;
+      --nav-bg:rgba(8,8,8,0.88);
+    }
+    [data-theme="light"] {
+      --bg:#F7F2E8;--surface:#EDE6D5;--border:#D4C9B0;
+      --gold:#8B6418;--gold-dim:#A8802E;--blue:#1E62A8;
+      --text:#18130A;--muted:#7A6F58;--nav-bg:rgba(247,242,232,0.92);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:var(--serif);line-height:1.7;transition:background .35s,color .35s;}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;border-bottom:1px solid transparent;transition:border-color .4s,background .4s;}
+    nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(14px);border-color:var(--border);}
+    .nav-logo{font-family:'Noto Naskh Arabic','Playfair Display',serif;font-size:1.4rem;color:var(--gold);text-decoration:none;}
+    .nav-right{display:flex;align-items:center;gap:1rem;}
+    .nav-back{font-family:var(--mono);font-size:0.7rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;transition:color .25s;}
+    .nav-back:hover{color:var(--gold);}
+    .ctrl-btn{background:none;border:1px solid var(--border);color:var(--muted);height:2rem;padding:0 .7rem;border-radius:2px;cursor:pointer;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;transition:border-color .25s,color .25s;}
+    .ctrl-btn:hover{border-color:var(--gold);color:var(--gold);}
+    .ctrl-btn.active{border-color:var(--gold);color:var(--gold);}
+    .theme-btn{width:2rem;height:2rem;padding:0;border-radius:50%;font-size:.9rem;}
+
+    .hero{padding:9rem 3rem 4rem;max-width:800px;margin:0 auto;}
+    .back-link{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.68rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2rem;transition:color .25s;}
+    .back-link:hover{color:var(--gold);}
+    .project-num{font-family:var(--mono);font-size:.68rem;color:var(--gold);letter-spacing:.2em;margin-bottom:1rem;}
+    .project-title{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;line-height:1.1;color:var(--text);margin-bottom:1rem;}
+    .project-summary{font-size:1.1rem;color:var(--muted);line-height:1.8;margin-bottom:2rem;max-width:600px;}
+    .meta-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:3rem;}
+    .meta-item{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.1em;}
+    .meta-item strong{color:var(--text);}
+    .tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+    .tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;padding:.25rem .6rem;border:1px solid var(--border);color:var(--muted);border-radius:2px;}
+    .tag.blue{border-color:rgba(74,144,217,.35);color:var(--blue);}
+    .tag.gold{border-color:rgba(201,169,110,.35);color:var(--gold);}
+
+    .divider{border:none;border-top:1px solid var(--border);max-width:800px;margin:0 auto 3rem;}
+
+    .body-content{max-width:800px;margin:0 auto;padding:0 3rem 6rem;}
+    .body-content h2,.body-content h3{font-family:var(--serif);color:var(--text);margin:2rem 0 1rem;}
+    .body-content h2{font-size:1.8rem;}
+    .body-content h3{font-size:1.3rem;color:var(--gold);}
+    .body-content p{color:var(--muted);line-height:1.85;margin-bottom:1.2rem;}
+    .body-content ul,.body-content ol{color:var(--muted);padding-left:1.5rem;margin-bottom:1.2rem;}
+    .body-content li{margin-bottom:.4rem;line-height:1.7;}
+    .body-content strong{color:var(--text);}
+    .body-content a{color:var(--blue);text-decoration:none;}
+    .body-content a:hover{text-decoration:underline;}
+
+    .github-btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:.8rem 1.5rem;border:1px solid var(--border);color:var(--muted);border-radius:2px;transition:all .25s;margin-bottom:2rem;}
+    .github-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+    footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    footer p{font-family:var(--mono);font-size:.65rem;color:var(--muted);}
+
+    @media(max-width:768px){
+      nav{padding:1.2rem 1.5rem;}
+      .hero{padding:7rem 1.5rem 3rem;}
+      .body-content{padding:0 1.5rem 4rem;}
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="../index.html" class="nav-logo">يونس</a>
+  <div class="nav-right">
+    <a href="../index.html#projeler" class="nav-back">← Projeler</a>
+    <button class="ctrl-btn active" id="btnTR" onclick="setLang('tr')">TR</button>
+    <button class="ctrl-btn" id="btnEN" onclick="setLang('en')">EN</button>
+    <button class="ctrl-btn theme-btn" id="themeBtn" onclick="toggleTheme()">☀️</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <a href="../index.html#projeler" class="back-link">← Tüm Projeler</a>
+  <div class="project-num" id="proj_num">01 / UAV</div>
+  <h1 class="project-title" id="proj_name">Proje</h1>
+  <p class="project-summary" id="proj_summary"></p>
+  <div class="meta-row">
+    <span class="meta-item"><strong id="proj_year"></strong></span>
+    <div class="tags" id="proj_tags"></div>
+  </div>
+  <a href="#" class="github-btn" id="proj_github" style="display:none">
+    ↗ GitHub
+  </a>
+</div>
+
+<hr class="divider"/>
+
+<div class="body-content" id="proj_body"></div>
+
+<footer>
+  <p>© 2025 Yunus</p>
+  <a href="../index.html" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;">Ana Sayfa ↗</a>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../firebase-config.js"></script>
+<script src="../content.js"></script>
+<script>
+// Proje ID'yi URL'den veya data-project attribute'dan al
+const projectId = document.currentScript?.dataset?.project
+  || new URLSearchParams(location.search).get('id')
+  || 'goktug25';
+
+let lang = 'tr';
+let project = null;
+
+function findProject() {
+  return CONTENT.projects.find(p => p.id === projectId) || CONTENT.projects[0];
+}
+
+function render() {
+  project = findProject();
+  if (!project) return;
+  const d = project.detail || {};
+  const isTR = lang === 'tr';
+
+  document.title = (isTR ? d.titleTR : d.titleEN) + ' — Yunus';
+  document.getElementById('proj_num').textContent = project.num || '';
+  document.getElementById('proj_name').textContent = project.name || '';
+  document.getElementById('proj_summary').innerHTML = isTR ? (d.summaryTR||'') : (d.summaryEN||'');
+  document.getElementById('proj_year').textContent = d.year || '';
+  document.getElementById('proj_body').innerHTML = isTR ? (d.bodyTR||'') : (d.bodyEN||'');
+
+  // Tags
+  const tagsEl = document.getElementById('proj_tags');
+  tagsEl.innerHTML = '';
+  (d.tags || project.tags || []).forEach(t => {
+    const [label, style] = t.split('::');
+    const span = document.createElement('span');
+    span.className = 'tag' + (style ? ' '+style : '');
+    span.textContent = label;
+    tagsEl.appendChild(span);
+  });
+
+  // GitHub
+  const ghBtn = document.getElementById('proj_github');
+  if (d.github) { ghBtn.href = d.github; ghBtn.style.display = 'inline-flex'; }
+  else { ghBtn.style.display = 'none'; }
+}
+
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.getElementById('btnTR').classList.toggle('active', l==='tr');
+  document.getElementById('btnEN').classList.toggle('active', l==='en');
+render();
+}
+
+let dark = true;
+function toggleTheme() {
+  dark = !dark;
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  document.getElementById('themeBtn').textContent = dark ? '☀️' : '🌙';
+}
+
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+render();
+</script>
+</body>
+</html>

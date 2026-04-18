@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<title>Kurulum Rehberi</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#080808;--surface:#111;--border:#1e1e1e;--gold:#C9A96E;--blue:#4A90D9;--text:#E2DAC8;--muted:#5a544a;--green:#5BAD7F;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;line-height:1.7;padding:4rem 2rem;max-width:800px;margin:0 auto;}
+  h1{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--gold);margin-bottom:.5rem;}
+  .subtitle{font-size:.75rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:3rem;}
+  h2{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;padding-top:2rem;border-top:1px solid var(--border);}
+  h3{font-size:.8rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin:1.5rem 0 .6rem;}
+  p{color:var(--muted);font-size:.85rem;margin-bottom:.8rem;line-height:1.75;}
+  strong{color:var(--text);}
+  .step{display:flex;gap:1.2rem;margin-bottom:1.5rem;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:2px;}
+  .step-num{font-size:1.5rem;color:var(--gold);font-family:'Playfair Display',serif;flex-shrink:0;line-height:1;}
+  .step-body p{margin-bottom:.4rem;}
+  code{background:#1a1a1a;color:#7dd3fc;padding:.15rem .4rem;border-radius:2px;font-size:.78rem;font-family:'JetBrains Mono',monospace;}
+  pre{background:#0d0d0d;border:1px solid var(--border);padding:1rem 1.2rem;border-radius:2px;overflow-x:auto;margin:1rem 0;}
+  pre code{background:none;padding:0;font-size:.78rem;color:#e2e8f0;}
+  .highlight{color:var(--gold);}
+  .file-tree{background:#0d0d0d;border:1px solid var(--border);padding:1rem 1.2rem;border-radius:2px;font-size:.78rem;color:var(--muted);margin:1rem 0;}
+  .file-tree .dir{color:var(--blue);}
+  .file-tree .imp{color:var(--gold);}
+  .badge{display:inline-block;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .6rem;border-radius:2px;margin-left:.4rem;vertical-align:middle;}
+  .badge-green{background:rgba(91,173,127,.15);color:var(--green);border:1px solid rgba(91,173,127,.3);}
+  .badge-gold{background:rgba(201,169,110,.1);color:var(--gold);border:1px solid rgba(201,169,110,.3);}
+  a{color:var(--blue);text-decoration:none;}a:hover{text-decoration:underline;}
+  .warn{background:rgba(201,169,110,.06);border:1px solid rgba(201,169,110,.25);padding:.8rem 1rem;border-radius:2px;font-size:.78rem;color:var(--muted);margin:1rem 0;}
+  .warn strong{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<h1>Kurulum Rehberi</h1>
+<p class="subtitle">Firebase + Netlify · Adım adım</p>
+
+<h2>📁 Dosya Yapısı</h2>
+<div class="file-tree">
+<span class="dir">site/</span><br>
+├── <span class="imp">firebase-config.js</span>   ← Firebase anahtarların<br>
+├── <span class="imp">content.js</span>            ← Firestore okuma mantığı<br>
+├── <span class="imp">index.html</span>            ← Ana sayfa<br>
+├── <span class="imp">admin.html</span>            ← Yönetim paneli<br>
+└── <span class="dir">projects/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── goktug25.html<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── hikmetler.html
+</div>
+
+<!-- ═══ BÖLÜM 1: FIREBASE ═══ -->
+<h2>1. Firebase Projesi Kur</h2>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body">
+    <p><strong>console.firebase.google.com</strong> aç → <strong>Add Project</strong></p>
+    <p>İsim: <code>yunus-site</code> (ya da istediğin)</p>
+    <p>Google Analytics: kapatabilirsin (gerek yok)</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <p><strong>Web uygulaması ekle</strong> → Sol menüde ⚙️ Project settings → <em>Your apps</em> → <code>&lt;/&gt;</code> ikonuna tıkla</p>
+    <p>App nickname: <code>yunus-web</code> → <strong>Register app</strong></p>
+    <p>Çıkan config objesini <strong>kopyala</strong>, <code>firebase-config.js</code>'e yapıştır:</p>
+    <pre><code>const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSy...",
+  authDomain:        "yunus-site.firebaseapp.com",
+  projectId:         "yunus-site",
+  storageBucket:     "yunus-site.appspot.com",
+  messagingSenderId: "123456789",
+  appId:             "1:123:web:abc"
+};</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <p><strong>Firestore Database</strong> oluştur → Sol menü: <em>Build → Firestore Database</em></p>
+    <p>→ <strong>Create database</strong> → <em>Start in test mode</em> (şimdilik)</p>
+    <p>Region: <code>eur3 (europe-west)</code> seç → Enable</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <p><strong>Firestore Rules</strong> → <em>Rules</em> sekmesi → şunu yapıştır:</p>
+    <pre><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Herkes okuyabilir (site ziyaretçileri)
+    match /site/content {
+      allow read: if true;
+      // Sadece giriş yapmış kullanıcı yazabilir
+      allow write: if request.auth != null;
+    }
+  }
+}</code></pre>
+    <p>→ <strong>Publish</strong></p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">5</div>
+  <div class="step-body">
+    <p><strong>Authentication</strong> etkinleştir → Sol menü: <em>Build → Authentication</em></p>
+    <p>→ <strong>Get started</strong> → <em>Email/Password</em> → Enable → Save</p>
+    <p>→ <em>Users</em> sekmesi → <strong>Add user</strong></p>
+    <p>E-posta: kendi mailin &nbsp; Şifre: güçlü bir şifre</p>
+    <p class="warn"><strong>Not:</strong> Bu kullanıcı sadece admin.html'e giriş için. Şifreyi güvenli bir yerde sakla.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">6</div>
+  <div class="step-body">
+    <p><strong>İlk içeriği Firestore'a yükle</strong> — Firebase Console → Firestore → <em>Start collection</em></p>
+    <p>Collection ID: <code>site</code> → Document ID: <code>content</code></p>
+    <p>Ya da <strong>admin.html'e giriş yap → Kaydet butonuna bas</strong> → otomatik oluşturur (daha kolay).</p>
+  </div>
+</div>
+
+<!-- ═══ BÖLÜM 2: NETLIFY ═══ -->
+<h2>2. Netlify'a Deploy Et</h2>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body">
+    <p>Bilgisayarda bir klasör aç: <code>yunus-site/</code></p>
+    <p>İndirdiğin tüm dosyaları içine koy (index.html, admin.html, content.js, firebase-config.js, projects/ klasörü)</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <p>Terminal aç, klasöre gir:</p>
+    <pre><code>cd yunus-site
+git init
+git add .
+git commit -m "bismillah, ilk commit"</code></pre>
+    <p><strong>github.com</strong>'da yeni repo aç: <code>yunus-site</code> (private olabilir)</p>
+    <pre><code>git remote add origin https://github.com/KULLANICI_ADIN/yunus-site.git
+git push -u origin main</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <p><strong>netlify.com</strong> → <em>Add new site → Import an existing project → GitHub</em></p>
+    <p>Repoyu seç → Build command: <strong>boş bırak</strong> → Publish directory: <code>/</code> → <strong>Deploy</strong></p>
+    <p>~30 saniyede site canlıya çıkar: <code>random-name.netlify.app</code></p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <p><strong>Custom domain</strong> → Netlify: Site settings → Domain management → Add custom domain</p>
+    <p>Namecheap'te: Domain → Manage → Nameservers → Custom DNS → Netlify'ın verdiği 2 NS'i gir</p>
+    <p>~10 dakika bekle, SSL otomatik aktif olur.</p>
+  </div>
+</div>
+
+<!-- ═══ BÖLÜM 3: GÜNLÜK KULLANIM ═══ -->
+<h2>3. Günlük Kullanım</h2>
+
+<h3>Site içeriği değiştirmek</h3>
+<div class="step">
+  <div class="step-num">→</div>
+  <div class="step-body">
+    <p><strong>siteadresin.com/admin.html</strong> aç → Firebase mailin + şifrenle giriş yap</p>
+    <p>İstediğin bölümü düzenle → <strong>Kaydet</strong> → anında Firestore'a yazılır, site güncellenir</p>
+  </div>
+</div>
+
+<h3>Yeni proje eklemek</h3>
+<div class="step">
+  <div class="step-num">→</div>
+  <div class="step-body">
+    <p>Admin → Projeler → <strong>+ Yeni Proje</strong></p>
+    <p>ID'yi not al (örn: <code>yeniproje</code>)</p>
+    <p>Projeler klasörüne <code>projects/yeniproje.html</code> dosyasını ekle (goktug25.html'den kopyala, sadece içindeki id değişiyor)</p>
+    <p>Git'e push at → Netlify otomatik deploy eder</p>
+  </div>
+</div>
+
+<h3>Kod değişikliği yapmak</h3>
+<div class="step">
+  <div class="step-num">→</div>
+  <div class="step-body">
+    <pre><code># Değişikliği yap, sonra:
+git add .
+git commit -m "değişiklik açıklaması"
+git push</code></pre>
+    <p>Netlify otomatik algılar, ~30 saniyede yeni versiyon canlıya çıkar.</p>
+  </div>
+</div>
+
+<!-- ═══ BÖLÜM 4: MALİYET ═══ -->
+<h2>4. Maliyet</h2>
+<div class="step" style="flex-direction:column;gap:.6rem;">
+  <p><strong style="color:var(--green)">Domain:</strong> ~$10-12/yıl (tek ücretli şey)</p>
+  <p><strong style="color:var(--green)">Netlify:</strong> Ücretsiz (100GB bant genişliği/ay)</p>
+  <p><strong style="color:var(--green)">Firebase Firestore:</strong> Ücretsiz (50K okuma/gün, 20K yazma/gün — kişisel site için sonsuz yeter)</p>
+  <p><strong style="color:var(--green)">Firebase Auth:</strong> Ücretsiz (10K kullanıcı/ay)</p>
+  <p style="margin-top:.5rem;font-size:.78rem;color:var(--muted)">Toplam: <strong style="color:var(--gold)">~$10-12/yıl</strong></p>
+</div>
+
+<div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);">
+  <p style="font-size:.72rem;color:var(--muted)">Bu rehber tamamlandığında site hazır. Sonraki adım: proje sayfalarını doldurmak.</p>
+</div>
+
+</body>
+</html>
