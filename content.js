@@ -16,7 +16,7 @@ const DEFAULT_CONTENT = {
       descTR: "TEKNOFEST İHA yarışması için geliştirilen sabit kanatlı insansız hava aracı. PyQt5 tabanlı yerli yer kontrol istasyonu, ArduPlane entegrasyonu.",
       descEN: "Fixed-wing UAV developed for the TEKNOFEST drone competition. Custom ground control station in PyQt5 with full ArduPlane integration.",
       tags: ["PyQt5::blue","ArduPlane::blue","MAVLink","SITL","TEKNOFEST::gold"],
-      link: "projects/goktug25.html",
+      link: "goktug25.html",
       detail: {
         titleTR: "GOKTUG-25 Yerli Kontrol İstasyonu", titleEN: "GOKTUG-25 Ground Control Station",
         summaryTR: "TEKNOFEST 2025 İHA yarışması kapsamında geliştirilen, sabit kanatlı bir insansız hava aracı için tam donanımlı yer kontrol istasyonu.",
@@ -32,7 +32,7 @@ const DEFAULT_CONTENT = {
       descTR: "922+ İslami hikmet, 4 dil, 62 âlim. Android uygulaması.",
       descEN: "922+ Islamic wisdoms, 4 languages, 62 scholars. Android app.",
       tags: ["JavaScript","Firebase::blue","Capacitor","Google Play::gold"],
-      link: "projects/hikmetler.html",
+      link: "hikmetler.html",
       detail: {
         titleTR: "Hikmetler Hazinesi", titleEN: "Hikmetler Hazinesi",
         summaryTR: "Büyük İslam âlimlerinin sözlerini dört dilde sunan Android uygulaması.",

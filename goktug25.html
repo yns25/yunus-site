@@ -80,9 +80,9 @@
 <body>
 
 <nav id="nav">
-  <a href="../index.html" class="nav-logo">يونس</a>
+  <a href="index.html" class="nav-logo">يونس</a>
   <div class="nav-right">
-    <a href="../index.html#projeler" class="nav-back">← Projeler</a>
+    <a href="index.html#projeler" class="nav-back">← Projeler</a>
     <button class="ctrl-btn active" id="btnTR" onclick="setLang('tr')">TR</button>
     <button class="ctrl-btn" id="btnEN" onclick="setLang('en')">EN</button>
     <button class="ctrl-btn theme-btn" id="themeBtn" onclick="toggleTheme()">☀️</button>
@@ -90,7 +90,7 @@
 </nav>
 
 <div class="hero">
-  <a href="../index.html#projeler" class="back-link">← Tüm Projeler</a>
+  <a href="index.html#projeler" class="back-link">← Tüm Projeler</a>
   <div class="project-num" id="proj_num">01 / UAV</div>
   <h1 class="project-title" id="proj_name">Proje</h1>
   <p class="project-summary" id="proj_summary"></p>
@@ -109,13 +109,13 @@
 
 <footer>
   <p>© 2025 Yunus</p>
-  <a href="../index.html" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;">Ana Sayfa ↗</a>
+  <a href="index.html" style="font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;">Ana Sayfa ↗</a>
 </footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="../firebase-config.js"></script>
-<script src="../content.js"></script>
+<script src="firebase-config.js"></script>
+<script src="content.js"></script>
 <script>
 // Proje ID'yi URL'den veya data-project attribute'dan al
 const projectId = document.currentScript?.dataset?.project
