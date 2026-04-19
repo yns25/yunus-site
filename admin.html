@@ -78,6 +78,23 @@
     @keyframes spin{to{transform:rotate(360deg);}}
     @media(max-width:600px){.grid2{grid-template-columns:1fr;}}
   </style>
+
+<script>
+// ── TERCIH YÖNETİMİ (tema + dil) ──
+// Sayfa yüklenir yüklenmez uygula, titreme olmasın
+(function() {
+  const theme = localStorage.getItem('pref_theme') || 'dark';
+  const lang  = localStorage.getItem('pref_lang')  || 'tr';
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.lang = lang;
+})();
+</script>
+<script>
+  (function(){
+    const t = localStorage.getItem('pref_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
 </head>
 <body>
 
@@ -116,7 +133,7 @@
     <div class="topbar">
       <h2 id="panelTitle">Ana Sayfa</h2>
       <div class="topbar-actions">
-        <button class="ctrl-btn theme-btn btn" onclick="toggleTheme()" id="themeBtn" style="border:1px solid var(--border);color:var(--muted);background:none;width:2rem;height:2rem;padding:0;border-radius:50%;cursor:pointer;">☀️</button>
+        <button class="ctrl-btn theme-btn btn" data-theme-btn="" id="themeBtn" style="border:1px solid var(--border);color:var(--muted);background:none;width:2rem;height:2rem;padding:0;border-radius:50%;cursor:pointer;">☀️</button>
         <button class="btn btn-gold" onclick="saveAll()" id="saveBtn">Kaydet</button>
       </div>
     </div>
@@ -239,6 +256,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script src="content.js"></script>
+<script src="app.js"></script>
 <script>
 const db   = firebase.firestore();
 const auth = firebase.auth();
@@ -401,7 +419,7 @@ async function saveProject() {
     descTR: document.getElementById('proj_descTR').value,
     descEN: document.getElementById('proj_descEN').value,
     tags: document.getElementById('proj_tags').value.split(',').map(t=>t.trim()).filter(Boolean),
-    link: `projects/${id}.html`,
+    link: `${id}.html`,
     detail: {
       titleTR:   document.getElementById('proj_titleTR').value,
       titleEN:   document.getElementById('proj_titleEN').value,
@@ -450,12 +468,7 @@ function switchTab(el, contentId) {
 }
 
 // ── TEMA ──
-let dark = true;
-function toggleTheme() {
-  dark = !dark;
-  document.documentElement.setAttribute('data-theme', dark?'dark':'light');
-  document.getElementById('themeBtn').textContent = dark?'☀️':'🌙';
-}
+// tema: app.js halleder
 
 // ── TOAST ──
 function showToast(msg, isErr=false) {

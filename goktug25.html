@@ -76,6 +76,23 @@
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet"/>
+
+<script>
+// ── TERCIH YÖNETİMİ (tema + dil) ──
+// Sayfa yüklenir yüklenmez uygula, titreme olmasın
+(function() {
+  const theme = localStorage.getItem('pref_theme') || 'dark';
+  const lang  = localStorage.getItem('pref_lang')  || 'tr';
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.lang = lang;
+})();
+</script>
+<script>
+  (function(){
+    const t = localStorage.getItem('pref_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
 </head>
 <body>
 
@@ -83,9 +100,9 @@
   <a href="index.html" class="nav-logo">يونس</a>
   <div class="nav-right">
     <a href="index.html#projeler" class="nav-back">← Projeler</a>
-    <button class="ctrl-btn active" id="btnTR" onclick="setLang('tr')">TR</button>
-    <button class="ctrl-btn" id="btnEN" onclick="setLang('en')">EN</button>
-    <button class="ctrl-btn theme-btn" id="themeBtn" onclick="toggleTheme()">☀️</button>
+    <button class="ctrl-btn active" id="btnTR" data-lang-btn="tr">TR</button>
+    <button class="ctrl-btn" id="btnEN" data-lang-btn="en">EN</button>
+    <button class="ctrl-btn theme-btn" id="themeBtn" data-theme-btn="">☀️</button>
   </div>
 </nav>
 
@@ -116,9 +133,10 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script src="content.js"></script>
+<script src="app.js"></script>
 <script>
+// ── Bu sayfaya özel: sadece proje ID ve render ──
 const projectId = 'goktug25';
-let lang = 'tr';
 let LOADED = null;
 
 function render() {
@@ -126,6 +144,7 @@ function render() {
   const project = LOADED.projects.find(p => p.id === projectId) || LOADED.projects[0];
   if (!project) return;
   const d = project.detail || {};
+  const lang = APP.lang;
   const isTR = lang === 'tr';
   document.title = (isTR ? d.titleTR : d.titleEN) + ' — Yunus';
   document.getElementById('proj_num').textContent = project.num || '';
@@ -147,23 +166,8 @@ function render() {
   else { ghBtn.style.display = 'none'; }
 }
 
-function setLang(l) {
-  lang = l;
-  document.documentElement.lang = l;
-  document.getElementById('btnTR').classList.toggle('active', l==='tr');
-  document.getElementById('btnEN').classList.toggle('active', l==='en');
-  render();
-}
-
-let dark = true;
-function toggleTheme() {
-  dark = !dark;
-  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  document.getElementById('themeBtn').textContent = dark ? '☀️' : '🌙';
-}
-
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+// Dil değişince yeniden render et
+window._onLangChange = () => render();
 
 (async () => {
   LOADED = await loadSiteContent();
