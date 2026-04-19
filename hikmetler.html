@@ -117,32 +117,22 @@
 <script src="firebase-config.js"></script>
 <script src="content.js"></script>
 <script>
-// Proje ID'yi URL'den veya data-project attribute'dan al
-const projectId = document.currentScript?.dataset?.project
-  || new URLSearchParams(location.search).get('id')
-  || 'hikmetler';
-
+const projectId = 'hikmetler';
 let lang = 'tr';
-let project = null;
-
-function findProject() {
-  return CONTENT.projects.find(p => p.id === projectId) || CONTENT.projects[0];
-}
+let LOADED = null;
 
 function render() {
-  project = findProject();
+  if (!LOADED) return;
+  const project = LOADED.projects.find(p => p.id === projectId) || LOADED.projects[0];
   if (!project) return;
   const d = project.detail || {};
   const isTR = lang === 'tr';
-
   document.title = (isTR ? d.titleTR : d.titleEN) + ' — Yunus';
   document.getElementById('proj_num').textContent = project.num || '';
   document.getElementById('proj_name').textContent = project.name || '';
   document.getElementById('proj_summary').innerHTML = isTR ? (d.summaryTR||'') : (d.summaryEN||'');
   document.getElementById('proj_year').textContent = d.year || '';
   document.getElementById('proj_body').innerHTML = isTR ? (d.bodyTR||'') : (d.bodyEN||'');
-
-  // Tags
   const tagsEl = document.getElementById('proj_tags');
   tagsEl.innerHTML = '';
   (d.tags || project.tags || []).forEach(t => {
@@ -152,8 +142,6 @@ function render() {
     span.textContent = label;
     tagsEl.appendChild(span);
   });
-
-  // GitHub
   const ghBtn = document.getElementById('proj_github');
   if (d.github) { ghBtn.href = d.github; ghBtn.style.display = 'inline-flex'; }
   else { ghBtn.style.display = 'none'; }
@@ -164,7 +152,7 @@ function setLang(l) {
   document.documentElement.lang = l;
   document.getElementById('btnTR').classList.toggle('active', l==='tr');
   document.getElementById('btnEN').classList.toggle('active', l==='en');
-render();
+  render();
 }
 
 let dark = true;
@@ -176,7 +164,11 @@ function toggleTheme() {
 
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
-render();
+
+(async () => {
+  LOADED = await loadSiteContent();
+  render();
+})();
 </script>
 </body>
 </html>
