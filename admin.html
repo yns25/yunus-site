@@ -221,6 +221,13 @@
         <div class="field"><label>Yıl</label><input type="text" id="proj_year"/></div>
         <div class="field"><label>GitHub URL</label><input type="url" id="proj_github"/></div>
       </div>
+      <div class="field">
+        <label>Kapak Görseli URL</label>
+        <input type="url" id="proj_cover" placeholder="https://i.ibb.co/... veya GitHub raw link"/>
+        <small style="font-size:.62rem;color:var(--muted);margin-top:.4rem;display:block">
+          imgbb.com veya GitHub'a yükle, linkini yapıştır
+        </small>
+      </div>
       <div class="field"><label>Etiketler (virgülle, renk için ::blue veya ::gold)</label><input type="text" id="proj_tags" placeholder="PyQt5::blue, SITL, TEKNOFEST::gold"/></div>
       <hr/>
       <div class="tabs">
@@ -382,7 +389,7 @@ function openNewProject() {
   editingIndex = -1;
   document.getElementById('modalTitle').textContent = 'Yeni Proje';
   document.getElementById('deleteBtn').style.display = 'none';
-  ['proj_id','proj_num','proj_name','proj_year','proj_github','proj_tags',
+  ['proj_id','proj_num','proj_name','proj_year','proj_github','proj_cover','proj_tags',
    'proj_descTR','proj_titleTR','proj_summaryTR','proj_bodyTR',
    'proj_descEN','proj_titleEN','proj_summaryEN','proj_bodyEN']
     .forEach(id => document.getElementById(id).value = '');
@@ -398,6 +405,7 @@ function openEditProject(i) {
   document.getElementById('proj_name').value   = p.name || '';
   document.getElementById('proj_year').value   = p.detail?.year || '';
   document.getElementById('proj_github').value = p.detail?.github || '';
+  document.getElementById('proj_cover').value   = p.coverImage || '';
   document.getElementById('proj_tags').value   = (p.tags||[]).join(', ');
   document.getElementById('proj_descTR').value    = p.descTR || '';
   document.getElementById('proj_titleTR').value   = p.detail?.titleTR || '';

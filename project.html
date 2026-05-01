@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Proje — Yunus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet"/>
+  <script>(function(){var t=localStorage.getItem('pref_theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+  <style>
+    :root{--bg:#080808;--surface:#111;--border:#1e1e1e;--gold:#C9A96E;--gold-dim:#7a6040;--blue:#4A90D9;--text:#E2DAC8;--muted:#5a544a;--serif:'Playfair Display',Georgia,serif;--mono:'JetBrains Mono',monospace;--arabic:'Noto Naskh Arabic',serif;--nav-bg:rgba(8,8,8,0.88);}
+    [data-theme="light"]{--bg:#F7F2E8;--surface:#EDE6D5;--border:#D4C9B0;--gold:#8B6418;--gold-dim:#A8802E;--blue:#1E62A8;--text:#18130A;--muted:#7A6F58;--nav-bg:rgba(247,242,232,0.92);}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:var(--serif);line-height:1.7;transition:background .35s,color .35s;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;border-bottom:1px solid transparent;transition:border-color .4s,background .4s;}
+    nav.scrolled{background:var(--nav-bg);backdrop-filter:blur(14px);border-color:var(--border);}
+    .nav-logo{font-family:var(--arabic);font-size:1.5rem;color:var(--gold);text-decoration:none;}
+    .nav-right{display:flex;align-items:center;gap:.8rem;}
+    .nav-back{font-family:var(--mono);font-size:.7rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;transition:color .25s;}
+    .nav-back:hover{color:var(--gold);}
+    .ctrl-btn{background:none;border:1px solid var(--border);color:var(--muted);height:2rem;padding:0 .7rem;border-radius:2px;cursor:pointer;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;transition:border-color .25s,color .25s;}
+    .ctrl-btn:hover,.ctrl-btn.active{border-color:var(--gold);color:var(--gold);}
+    .theme-btn{width:2rem;height:2rem;padding:0;border-radius:50%;font-size:.9rem;}
+
+    /* HERO */
+    .hero{padding:9rem 3rem 3rem;max-width:860px;margin:0 auto;}
+    .back-link{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.68rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2rem;transition:color .25s;}
+    .back-link:hover{color:var(--gold);}
+    .project-num{font-family:var(--mono);font-size:.68rem;color:var(--gold);letter-spacing:.2em;margin-bottom:1rem;}
+    .project-title{font-size:clamp(2rem,4vw,3.5rem);font-weight:700;line-height:1.1;color:var(--text);margin-bottom:1rem;}
+    .project-summary{font-size:1.1rem;color:var(--muted);line-height:1.8;margin-bottom:2rem;max-width:620px;}
+    .meta-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+    .meta-item{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.1em;}
+    .meta-item strong{color:var(--text);}
+    .tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+    .tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;padding:.25rem .6rem;border:1px solid var(--border);color:var(--muted);border-radius:2px;}
+    .tag.blue{border-color:rgba(74,144,217,.35);color:var(--blue);}
+    .tag.gold{border-color:rgba(201,169,110,.35);color:var(--gold);}
+
+    /* COVER IMAGE */
+    .project-cover{max-width:860px;margin:0 auto 0;padding:0 3rem;}
+    .project-cover img{width:100%;max-height:480px;object-fit:cover;border:1px solid var(--border);border-radius:2px;display:block;}
+
+    .divider{border:none;border-top:1px solid var(--border);max-width:860px;margin:3rem auto;}
+
+    /* BODY */
+    .body-content{max-width:860px;margin:0 auto;padding:0 3rem 6rem;}
+    .body-content h2,.body-content h3{font-family:var(--serif);color:var(--text);margin:2rem 0 1rem;}
+    .body-content h2{font-size:1.8rem;}
+    .body-content h3{font-size:1.3rem;color:var(--gold);}
+    .body-content p{color:var(--muted);line-height:1.85;margin-bottom:1.2rem;}
+    .body-content ul,.body-content ol{color:var(--muted);padding-left:1.5rem;margin-bottom:1.2rem;}
+    .body-content li{margin-bottom:.4rem;line-height:1.7;}
+    .body-content strong{color:var(--text);}
+    .body-content a{color:var(--blue);text-decoration:none;}
+    .body-content a:hover{text-decoration:underline;}
+    .body-content img{max-width:100%;border:1px solid var(--border);border-radius:2px;margin:1.5rem 0;}
+
+    .github-btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:.8rem 1.5rem;border:1px solid var(--border);color:var(--muted);border-radius:2px;transition:all .25s;margin-bottom:2rem;}
+    .github-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+    /* NOT FOUND */
+    .not-found{text-align:center;padding:10rem 3rem;}
+    .not-found h2{font-size:2rem;color:var(--muted);margin-bottom:1rem;}
+    .not-found a{font-family:var(--mono);font-size:.75rem;color:var(--gold);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;}
+
+    footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    footer p{font-family:var(--mono);font-size:.65rem;color:var(--muted);}
+    footer a{font-family:var(--mono);font-size:.65rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;}
+    footer a:hover{color:var(--gold);}
+
+    .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;transition:opacity .5s;}
+    .loading-overlay.hidden{opacity:0;pointer-events:none;}
+    .loading-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;animation:blink 1s infinite;}
+    @keyframes blink{0%,100%{opacity:.2;}50%{opacity:1;}}
+
+    @media(max-width:768px){
+      nav{padding:1.2rem 1.5rem;}
+      .hero{padding:7rem 1.5rem 2rem;}
+      .project-cover{padding:0 1.5rem;}
+      .body-content{padding:0 1.5rem 4rem;}
+      footer{padding:1.5rem;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay"><div class="loading-dot"></div></div>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">يونس</a>
+  <div class="nav-right">
+    <a href="index.html#projeler" class="nav-back">← Projeler</a>
+    <button class="ctrl-btn" data-lang-btn="tr" id="btnTR">TR</button>
+    <button class="ctrl-btn" data-lang-btn="en" id="btnEN">EN</button>
+    <button class="ctrl-btn theme-btn" data-theme-btn="" id="themeBtn">☀️</button>
+  </div>
+</nav>
+
+<!-- İçerik buraya dinamik gelecek -->
+<div id="pageContent"></div>
+
+<footer>
+  <p>© 2025 Yunus</p>
+  <a href="index.html">Ana Sayfa ↗</a>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="content.js"></script>
+<script src="app.js"></script>
+<script>
+// URL'den proje ID'sini al: project.html?id=goktug25
+var projectId = new URLSearchParams(location.search).get('id');
+var LOADED = null;
+
+function render() {
+  if (!LOADED) return;
+  var lang = APP.lang;
+  var isTR = lang === 'tr';
+  var content = document.getElementById('pageContent');
+
+  if (!projectId) {
+    // ID yoksa proje listesine yönlendir
+    location.href = 'index.html#projeler';
+    return;
+  }
+
+  var project = LOADED.projects.find(function(p) { return p.id === projectId; });
+
+  if (!project) {
+    content.innerHTML =
+      '<div class="not-found">' +
+      '<h2>Proje bulunamadı</h2>' +
+      '<a href="index.html#projeler">← Tüm Projeler</a>' +
+      '</div>';
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    return;
+  }
+
+  var d = project.detail || {};
+  var title = isTR ? (d.titleTR || project.name) : (d.titleEN || project.name);
+  document.title = title + ' — Yunus';
+
+  // Tag'leri oluştur
+  var tags = (d.tags || project.tags || []).map(function(tag) {
+    var parts = tag.split('::');
+    return '<span class="tag ' + (parts[1] || '') + '">' + parts[0] + '</span>';
+  }).join('');
+
+  // Cover image
+  var coverHtml = '';
+  if (project.coverImage) {
+    coverHtml =
+      '<div class="project-cover">' +
+      '<img src="' + project.coverImage + '" alt="' + project.name + '" loading="lazy"/>' +
+      '</div>';
+  }
+
+  // GitHub butonu
+  var githubHtml = '';
+  if (d.github) {
+    githubHtml = '<a href="' + d.github + '" target="_blank" class="github-btn">&#8599; GitHub</a>';
+  }
+
+  content.innerHTML =
+    '<div class="hero">' +
+    '<a href="index.html#projeler" class="back-link">← Tüm Projeler</a>' +
+    '<div class="project-num">' + (project.num || '') + '</div>' +
+    '<h1 class="project-title">' + title + '</h1>' +
+    '<p class="project-summary">' + (isTR ? (d.summaryTR||'') : (d.summaryEN||'')) + '</p>' +
+    '<div class="meta-row">' +
+    (d.year ? '<span class="meta-item"><strong>' + d.year + '</strong></span>' : '') +
+    '<div class="tags">' + tags + '</div>' +
+    '</div>' +
+    githubHtml +
+    '</div>' +
+    coverHtml +
+    (coverHtml ? '<hr class="divider"/>' : '<hr class="divider"/>') +
+    '<div class="body-content">' + (isTR ? (d.bodyTR||'') : (d.bodyEN||'')) + '</div>';
+
+  var overlay = document.getElementById('loadingOverlay');
+  overlay.classList.add('hidden');
+  setTimeout(function() { if (overlay.parentNode) overlay.remove(); }, 600);
+}
+
+window._onLangChange = function() { render(); };
+
+(async function() {
+  LOADED = await loadSiteContent();
+  render();
+})();
+</script>
+</body>
+</html>
